@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy Father's Day 💛</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+Devanagari:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D5A3;
+    --warm-white: #FDFAF5;
+    --ink: #1A1510;
+    --ink-soft: #3D3020;
+    --ink-faint: #7A6848;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--warm-white);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  #canvas {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0; opacity: 0.55;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 48px 24px 160px;
+  }
+
+  .date-badge {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 100px; padding: 6px 18px;
+    margin-bottom: 40px;
+  }
+
+  .icon-wrap {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, #F5EDD8 0%, #E8D5A3 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin-bottom: 28px; position: relative;
+    animation: breathe 4s ease-in-out infinite;
+  }
+  .icon-wrap::after {
+    content: ''; position: absolute; inset: -6px; border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.3);
+    animation: ring 4s ease-in-out infinite;
+  }
+  @keyframes breathe { 0%,100%{transform:scale(1)}50%{transform:scale(1.04)} }
+  @keyframes ring { 0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:.3} }
+
+  .headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 10vw, 54px);
+    font-weight: 300; line-height: 1.1;
+    text-align: center; letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .headline em { font-style: italic; color: var(--gold); }
+  .headline-hindi {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(28px, 8vw, 44px);
+    font-weight: 300; line-height: 1.3;
+    text-align: center; color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .headline-hindi em { font-style: normal; color: var(--gold); }
+
+  .sub-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(13px, 3.5vw, 17px);
+    font-weight: 300; font-style: italic;
+    color: var(--ink-faint); margin-bottom: 44px; letter-spacing: 0.04em;
+  }
+  .sub-headline-hindi {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(13px, 3.5vw, 16px);
+    font-weight: 300; color: var(--ink-faint);
+    margin-bottom: 44px; letter-spacing: 0.02em;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 14px;
+    width: 100%; max-width: 360px; margin-bottom: 44px;
+  }
+  .divider-line { flex:1; height:1px; background: linear-gradient(to right, transparent, var(--gold-light), transparent); }
+  .divider-dot { width:5px; height:5px; border-radius:50%; background:var(--gold); }
+
+  .card {
+    width: 100%; max-width: 390px;
+    background: rgba(255,255,255,0.70);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 24px; padding: 34px 28px; margin-bottom: 20px;
+    box-shadow: 0 2px 40px rgba(201,168,76,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .msg-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 4.5vw, 21px);
+    font-weight: 300; line-height: 1.8;
+    color: var(--ink-soft); text-align: center;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .msg-text.hindi-mode {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(15px, 4vw, 19px);
+    line-height: 2.0;
+  }
+  .msg-text.fade-out { opacity:0; transform:translateY(6px); }
+
+  .lang-toggle {
+    display: flex; align-items: center;
+    background: rgba(201,168,76,0.10);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 100px; padding: 3px;
+    margin: 22px auto 0; width: fit-content;
+  }
+  .lang-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    padding: 7px 20px; border: none; background: transparent;
+    color: var(--ink-faint); border-radius: 100px;
+    cursor: pointer; transition: background 0.25s, color 0.25s;
+  }
+  .lang-btn.active { background: var(--gold); color: white; }
+
+  .shayeri-card {
+    width: 100%; max-width: 390px;
+    border-left: 3px solid var(--gold);
+    padding: 26px 26px 26px 28px; margin-bottom: 0;
+  }
+  .shayeri-label {
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+  }
+  .shayeri-text {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(15px, 4vw, 18px);
+    font-weight: 300; line-height: 2.0;
+    color: var(--ink-soft);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .shayeri-text.latin-mode {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(16px, 4.2vw, 20px);
+    line-height: 1.85;
+  }
+  .shayeri-text.fade-out { opacity:0; transform:translateY(6px); }
+
+  /* Music */
+  .music-section { width:100%; max-width:390px; margin-top:28px; }
+  .music-label {
+    font-size:9px; font-weight:500; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold);
+    margin-bottom:12px; text-align:center;
+  }
+  .music-card {
+    background: rgba(255,255,255,0.70);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(201,168,76,0.22);
+    border-radius:20px; padding:22px 20px;
+    box-shadow:0 2px 30px rgba(201,168,76,0.10);
+  }
+  .music-top { display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+  .album-art {
+    width:52px; height:52px; border-radius:12px;
+    background: linear-gradient(135deg,#E8D5A3,#C9A84C);
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+  }
+  .music-meta { flex:1; }
+  .music-title { font-size:15px; font-weight:500; color:var(--ink); }
+  .music-artist { font-size:12px; color:var(--ink-faint); margin-top:2px; }
+  .wave-bars { display:flex; align-items:flex-end; gap:3px; height:24px; }
+  .wbar { width:3px; border-radius:2px; background:var(--gold); height:4px; }
+  .playing-anim .wbar:nth-child(1){animation:wv .5s ease-in-out infinite alternate}
+  .playing-anim .wbar:nth-child(2){animation:wv .5s ease-in-out infinite alternate .1s}
+  .playing-anim .wbar:nth-child(3){animation:wv .5s ease-in-out infinite alternate .2s}
+  .playing-anim .wbar:nth-child(4){animation:wv .5s ease-in-out infinite alternate .05s}
+  .playing-anim .wbar:nth-child(5){animation:wv .5s ease-in-out infinite alternate .15s}
+  @keyframes wv { from{height:4px}to{height:22px} }
+  .play-row { display:flex; align-items:center; gap:12px; }
+  .big-play-btn {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:10px;
+    background:var(--gold); color:white; border:none; border-radius:14px;
+    padding:15px 20px; font-family:'Inter',sans-serif;
+    font-size:14px; font-weight:500; cursor:pointer;
+    transition:transform .15s, box-shadow .15s;
+    box-shadow:0 4px 18px rgba(201,168,76,0.4);
+    text-decoration:none;
+  }
+  .big-play-btn:active{transform:scale(.96)}
+  .yt-btn {
+    display:flex; align-items:center; justify-content:center;
+    width:50px; height:50px; background:#FF0000;
+    border-radius:14px; text-decoration:none; flex-shrink:0;
+    box-shadow:0 4px 14px rgba(255,0,0,0.25); transition:transform .15s;
+  }
+  .yt-btn:active{transform:scale(.95)}
+  .yt-btn svg{width:22px;height:22px;fill:white}
+  .or-text{font-size:10px;color:var(--ink-faint);letter-spacing:.1em;text-align:center;margin:12px 0 0}
+
+  .footer-note{margin-top:40px;font-size:11px;color:var(--ink-faint);letter-spacing:.08em;text-align:center;opacity:.6}
+
+  .fade-in{opacity:0;transform:translateY(16px);animation:fadeUp .7s ease forwards}
+  @keyframes fadeUp{to{opacity:1;transform:none}}
+  .fade-in:nth-child(1){animation-delay:.1s}
+  .fade-in:nth-child(2){animation-delay:.2s}
+  .fade-in:nth-child(3){animation-delay:.35s}
+  .fade-in:nth-child(4){animation-delay:.5s}
+  .fade-in:nth-child(5){animation-delay:.65s}
+  .fade-in:nth-child(6){animation-delay:.8s}
+  .fade-in:nth-child(7){animation-delay:.9s}
+  .fade-in:nth-child(8){animation-delay:1.0s}
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="page">
+
+  <div class="date-badge fade-in" id="top-badge">June 15 · Father's Day 💛</div>
+
+  <div class="icon-wrap fade-in">👨‍👦</div>
+
+  <!-- Headline — swaps between EN and HI -->
+  <div id="headline-en" class="fade-in">
+    <h1 class="headline">Happy <em>Father's</em><br>Day, Papa</h1>
+  </div>
+  <div id="headline-hi" class="fade-in" style="display:none;">
+    <h1 class="headline-hindi">पिताजी, आप हमारी<br><em>जान</em> हैं</h1>
+  </div>
+
+  <p class="sub-headline fade-in" id="sub-en">With all the love in the world</p>
+  <p class="sub-headline-hindi fade-in" id="sub-hi" style="display:none;">दिल की गहराइयों से, आपके लिए</p>
+
+  <div class="divider fade-in">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- Message Card -->
+  <div class="card fade-in">
+    <p class="msg-text" id="msg-text">
+      You are the reason I know what strength looks like.<br>
+      Not loud, not showy — just steady, always there.<br><br>
+      Every sacrifice you made quietly, every long day you came home tired but still smiled at me — I saw it all.<br><br>
+      I may not say it enough, but <strong>Papa, you are my whole world.</strong><br><br>
+      Thank you for being my first hero, my safe place, and my forever favourite person. 💛
+    </p>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">English</button>
+      <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिन्दी</button>
+    </div>
+  </div>
+
+  <!-- Shayeri -->
+  <div class="shayeri-card fade-in">
+    <div class="shayeri-label" id="shayeri-label">✦ हिन्दी शायरी</div>
+    <p class="shayeri-text" id="shayeri-text">
+      "वो हाथ जो थामे थे मुझे गिरने से,<br>
+      वो आँखें जो भर आईं मेरी ख़ुशी से —<br>
+      पापा, तेरी मोहब्बत का कोई मोल नहीं,<br>
+      तेरे साये में ही मिली ज़िंदगी मुझे।"
+    </p>
+    <div class="lang-toggle" style="margin-top:18px;">
+      <button class="lang-btn active" id="sbtn-hi" onclick="setShayeriLang('hi')">हिन्दी</button>
+      <button class="lang-btn" id="sbtn-en" onclick="setShayeriLang('en')">English</button>
+    </div>
+  </div>
+
+  <!-- Music -->
+  <div class="music-section fade-in">
+    <div class="music-label">🎵 Background Song</div>
+    <div class="music-card">
+      <div class="music-top">
+        <div class="album-art">🎶</div>
+        <div class="music-meta">
+          <div class="music-title">Papa Meri Jaan</div>
+          <div class="music-artist">Sonu Nigam · Animal (2023)</div>
+        </div>
+        <div class="wave-bars" id="wave-bars">
+          <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
+          <div class="wbar"></div><div class="wbar"></div>
+        </div>
+      </div>
+      <div class="play-row">
+        <button class="big-play-btn" id="play-btn" onclick="startAudio()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          <span id="play-label">Tap to Play</span>
+        </button>
+        <a class="yt-btn" href="https://www.youtube.com/watch?v=zTmQeQSwwbk" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.86 12l-6.11 3.52z"/></svg>
+        </a>
+      </div>
+      <div class="or-text">↑ यहाँ Play करें &nbsp;·&nbsp; या YouTube पर खोलें →</div>
+    </div>
+  </div>
+
+  <div class="footer-note fade-in">प्यार से बनाया गया · Papa Meri Jaan 💛</div>
+</div>
+
+<div id="yt-container" style="position:fixed;width:2px;height:2px;opacity:0.01;pointer-events:none;bottom:0;left:0;overflow:hidden;"></div>
+
+<script>
+/* ── CONTENT ── */
+const content = {
+  en: {
+    badge: "June 15 · Father's Day 💛",
+    sub: "With all the love in the world",
+    msg: `You are the reason I know what strength looks like.<br>
+Not loud, not showy — just steady, always there.<br><br>
+Every sacrifice you made quietly, every long day you came home tired but still smiled at me — I saw it all.<br><br>
+I may not say it enough, but <strong>Papa, you are my whole world.</strong><br><br>
+Thank you for being my first hero, my safe place, and my forever favourite person. 💛`,
+    shayeriLabel: "✦ Hindi Shayeri (Translation)",
+    shayeri: `"Those hands that held me when I'd fall,<br>
+Those eyes that filled with joy at mine —<br>
+Papa, no price can match your love,<br>
+In your shadow, I found my life."`,
+    orText: "↑ Play here &nbsp;·&nbsp; or open on YouTube →",
+    footer: "Made with love · Papa Meri Jaan 💛"
+  },
+  hi: {
+    badge: "पिता दिवस · जून १५ 💛",
+    sub: "दिल की गहराइयों से, आपके लिए",
+    msg: `पापा, आपने कभी नहीं बताया कितना मुश्किल था —<br>
+फिर भी हर रोज़ उठकर खड़े रहे, सिर्फ़ मेरे लिए।<br><br>
+आपकी आँखों में मैंने अपना कल देखा है,<br>
+और आपके हाथों में अपनी पूरी दुनिया।<br><br>
+<strong>पापा, आप सिर्फ़ मेरे पिता नहीं — आप मेरी जान हैं।</strong><br><br>
+आज और हमेशा — शुक्रिया। 💛`,
+    shayeriLabel: "✦ हिन्दी शायरी",
+    shayeri: `"वो हाथ जो थामे थे मुझे गिरने से,<br>
+वो आँखें जो भर आईं मेरी ख़ुशी से —<br>
+पापा, तेरी मोहब्बत का कोई मोल नहीं,<br>
+तेरे साये में ही मिली ज़िंदगी मुझे।"`,
+    orText: "↑ यहाँ Play करें &nbsp;·&nbsp; या YouTube पर खोलें →",
+    footer: "प्यार से बनाया गया · Papa Meri Jaan 💛"
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+
+  // toggle buttons
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-hi').classList.toggle('active', lang === 'hi');
+
+  const c = content[lang];
+
+  // badge
+  document.getElementById('top-badge').textContent = c.badge;
+
+  // headline swap
+  document.getElementById('headline-en').style.display = lang === 'en' ? '' : 'none';
+  document.getElementById('headline-hi').style.display = lang === 'hi' ? '' : 'none';
+
+  // sub
+  document.getElementById('sub-en').style.display = lang === 'en' ? '' : 'none';
+  document.getElementById('sub-hi').style.display = lang === 'hi' ? '' : 'none';
+
+  // message
+  const msgEl = document.getElementById('msg-text');
+  msgEl.classList.add('fade-out');
+  setTimeout(() => {
+    msgEl.innerHTML = c.msg;
+    msgEl.classList.toggle('hindi-mode', lang === 'hi');
+    msgEl.classList.remove('fade-out');
+  }, 320);
+
+  // shayeri label
+  document.getElementById('shayeri-label').textContent = c.shayeriLabel;
+
+  // shayeri — keep whichever sub-lang was selected, but update label
+  // reset shayeri to matching lang
+  const shayeriEl = document.getElementById('shayeri-text');
+  shayeriEl.classList.add('fade-out');
+  setTimeout(() => {
+    shayeriEl.innerHTML = c.shayeri;
+    shayeriEl.classList.toggle('latin-mode', lang === 'en');
+    shayeriEl.classList.remove('fade-out');
+    // sync shayeri buttons
+    document.getElementById('sbtn-hi').classList.toggle('active', lang === 'hi');
+    document.getElementById('sbtn-en').classList.toggle('active', lang === 'en');
+  }, 320);
+
+  // or-text & footer
+  document.querySelector('.or-text').innerHTML = c.orText;
+  document.querySelector('.footer-note').textContent = c.footer;
+}
+
+function setShayeriLang(lang) {
+  document.getElementById('sbtn-hi').classList.toggle('active', lang === 'hi');
+  document.getElementById('sbtn-en').classList.toggle('active', lang === 'en');
+  const shayeriEl = document.getElementById('shayeri-text');
+  shayeriEl.classList.add('fade-out');
+  const src = lang === 'hi' ? content.hi.shayeri : content.en.shayeri;
+  setTimeout(() => {
+    shayeriEl.innerHTML = src;
+    shayeriEl.classList.toggle('latin-mode', lang === 'en');
+    shayeriEl.classList.remove('fade-out');
+  }, 320);
+}
+
+/* ── AUDIO ── */
+let ytPlayer = null, isPlaying = false;
+
+function startAudio() {
+  if (ytPlayer) {
+    if (isPlaying) {
+      ytPlayer.pauseVideo(); isPlaying = false;
+      document.getElementById('play-label').textContent = 'Tap to Play';
+      document.getElementById('wave-bars').classList.remove('playing-anim');
+    } else {
+      ytPlayer.playVideo(); isPlaying = true;
+      document.getElementById('play-label').textContent = 'Now Playing ♪';
+      document.getElementById('wave-bars').classList.add('playing-anim');
+    }
+    return;
+  }
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+  const div = document.createElement('div');
+  div.id = 'yt-iframe-target';
+  document.getElementById('yt-container').appendChild(div);
+  document.getElementById('play-label').textContent = 'Loading…';
+
+  window.onYouTubeIframeAPIReady = function() {
+    ytPlayer = new YT.Player('yt-iframe-target', {
+      videoId: 'zTmQeQSwwbk', width:'2', height:'2',
+      playerVars: { autoplay:1, controls:0, loop:1, playlist:'zTmQeQSwwbk', rel:0, fs:0, mute:0 },
+      events: {
+        onReady: e => {
+          e.target.unMute();
+          e.target.setVolume(100);
+          e.target.playVideo(); isPlaying = true;
+          document.getElementById('play-label').textContent = 'Now Playing ♪';
+          document.getElementById('wave-bars').classList.add('playing-anim');
+        },
+        onStateChange: e => {
+          if (e.data === YT.PlayerState.PLAYING) {
+            isPlaying = true;
+            document.getElementById('play-label').textContent = 'Now Playing ♪';
+            document.getElementById('wave-bars').classList.add('playing-anim');
+          } else {
+            isPlaying = false;
+            document.getElementById('play-label').textContent = 'Tap to Play';
+            document.getElementById('wave-bars').classList.remove('playing-anim');
+          }
+        }
+      }
+    });
+  };
+}
+
+/* ── PARTICLES ── */
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+class P {
+  constructor(){ this.reset(); }
+  reset(){
+    this.x = Math.random()*W; this.y = H+20;
+    this.size = Math.random()*2.5+0.8;
+    this.speedY = -(Math.random()*.35+.12);
+    this.speedX = (Math.random()-.5)*.25;
+    this.opacity = Math.random()*.45+.1;
+    this.life = 0; this.maxLife = Math.random()*220+100;
+  }
+  update(){ this.y+=this.speedY; this.x+=this.speedX; this.life++; if(this.life>this.maxLife||this.y<-20) this.reset(); }
+  draw(){
+    ctx.save(); ctx.globalAlpha = this.opacity*(1-this.life/this.maxLife);
+    ctx.fillStyle='#C9A84C'; ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+}
+for(let i=0;i<55;i++){ const p=new P(); p.y=Math.random()*H; p.life=Math.random()*p.maxLife; particles.push(p); }
+(function animate(){ ctx.clearRect(0,0,W,H); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animate); })();
+</script>
+</body>
+</html>
